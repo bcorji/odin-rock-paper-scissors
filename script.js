@@ -14,8 +14,6 @@ function getComputerChoice() {
   return choice;
 }
 
-
-
 function getHumanChoice() {
   let x = prompt('Enter your choice: ');
   let choice; //= x.toLowerCase();
@@ -33,7 +31,6 @@ function getHumanChoice() {
   return choice;
 }
 
-
 function playRound(humanChoice, computerChoice) {
   if (humanChoice === computerChoice) {
     return 'None';
@@ -42,34 +39,62 @@ function playRound(humanChoice, computerChoice) {
   const outcomes = {
     rock: { paper: 'human', scissors: 'computer' },
     paper: { rock: 'computer', scissors: 'human' },
-    scissors: { rock: 'human', paper: 'computer' }
+    scissors: { rock: 'human', paper: 'computer' },
   };
 
   return outcomes[computerChoice][humanChoice];
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-console.log(`${winner} won. Game Over.`);
-console.log(`Computer: ${computerScore}.\nHuman: ${humanScore}.\n`);
-
-function playGame() {
-
-  let computerChoice = getComputerChoice();
-  console.log(computerChoice);
-  let humanChoice = getHumanChoice();
-  console.log(humanChoice);
-
+async function playGame() {
   let humanScore = 0;
   let computerScore = 0;
 
-  let winner = playRound(humanChoice, computerChoice);
+  for (let i = 1; i <= 5; i++) {
+    console.log(`\n--- Round ${i} ---`);
 
-  if (winner == 'human') {
-    humanScore++;
-  }
-  if (winner == 'computer') {
-    computerScore++;
+    const computerChoice = getComputerChoice();
+    const humanChoice = getHumanChoice();
+    
+    console.log(`Computer choice: ${computerChoice}`);
+    console.log(`Human choice: ${humanChoice}`);
+
+    const winner = playRound(humanChoice, computerChoice);
+
+    if (winner === 'human') {
+      humanScore++;
+      console.log('You won this round!');
+    } else if (winner === 'computer') {
+      computerScore++;
+      console.log('Computer won this round!');
+    } else {
+      console.log("It's a tie!");
+    }
+
+    console.log(`Current Score -> Human: ${humanScore}, Computer: ${computerScore}\n`);
+
+    // Delay  between rounds
+    await sleep(3000);
   }
 
-  for (let i = 0; i < 5; i++) {}
+  console.log('\n--- Game Over ---');
+  if (humanScore > computerScore) {
+    console.log('🎉 You win the game!');
+  } else if (computerScore > humanScore) {
+    console.log('💻 Computer wins the game!');
+  } else {
+    console.log('🤝 The game is a tie!');
+  }
 }
+
+
+async function startGame() {
+  console.log('Starting the game...');
+  await sleep(3000);
+  playGame();
+}
+// Call the startGame function to initiate the game
+startGame();
